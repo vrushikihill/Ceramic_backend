@@ -66,6 +66,28 @@ model reset_links {
   updatedAt   DateTime @default(now()) @db.Timestamp(0)
 }
 
+model order {
+  id              String       @id @default(uuid()) @db.VarChar(36)
+  name            String       @default("") @db.VarChar(100)
+  date            DateTime
+  dueDate         DateTime
+  number          String
+  currency        String
+  billingAddress  Json?        @db.Json
+  shippingAddress Json?        @db.Json
+  paymentType     String
+  products        Json         @db.Json
+  subTotal        String
+  totalQuantity   String
+  tax             String
+  discount        String
+  adjustment      String
+  total           String
+  customerNote    String?
+  status          order_status
+  paymentTerms    String
+}
+
 enum oauth_providers_enum {
   LOCAL
   GOOGLE
@@ -76,4 +98,11 @@ enum user_role {
   SUPER_ADMIN
   ADMIN
   USER
+}
+
+enum order_status {
+  PENDING
+  IN_PROGRESS
+  SUCCESS
+  FAILED
 }

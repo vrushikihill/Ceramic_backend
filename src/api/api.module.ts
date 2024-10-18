@@ -6,9 +6,17 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { UserModule } from './user/user.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, EmailModule, CommonModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    PrismaModule,
+    EmailModule,
+    CommonModule,
+    OrderModule,
+  ],
 })
 export class ApiModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
