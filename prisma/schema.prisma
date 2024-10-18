@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id                      String                     @id @default(uuid()) @db.VarChar(36)
+  name                    String                     @default("") @db.VarChar(100)
+  email                   String                     @unique(map: "email_UNIQUE") @db.VarChar(100)
+  enabled                 Boolean                    @default(true)
+  owner                   Boolean                    @default(false)
+  password                String?                    @db.VarChar(255)
+  createdById             String?                    @db.VarChar(36)
+  updatedById             String?                    @db.VarChar(36)
+  createdAt               DateTime                   @default(now()) @db.Timestamp(0)
+  updatedAt               DateTime                   @default(now()) @db.Timestamp(0)
+  deletedAt               DateTime?                  @map("deletedAt")
+  isDeleted               Boolean                    @default(false)
+  role                    user_role?
+  emailVerificationTokens email_verification_token[]
+  createdBy               user?                      @relation("user_createdByTouser", fields: [createdById], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "created_by")
+  usersCreatedBy          user[]                     @relation("user_createdByTouser")
+  updatedBy               user?                      @relation("user_updatedByTouser", fields: [updatedById], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "updated_by")
+  usersUpdatedBy          user[]                     @relation("user_updatedByTouser")
+  authProviders           oauth_providers[]
+
+  @@index([createdById], map: "created_by_idx")
+  @@index([updatedById], map: "updated_by_idx")
+}
+
+model oauth_providers {
+  id        String               @id @default(uuid()) @db.VarChar(36)
+  provider  oauth_providers_enum
+  userId    String               @db.VarChar(36)
+  createdAt DateTime             @default(now()) @db.Timestamp(0)
+  updatedAt DateTime             @default(now()) @db.Timestamp(0)
+  user      user                 @relation(fields: [userId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+
+  @@unique([provider, userId], map: "provider_UNIQUE")
+}
+
+model email_verification_token {
+  id         String   @id @default(uuid()) @db.VarChar(36)
+  token      String   @unique(map: "token_UNIQUE") @default(uuid()) @db.VarChar(36)
+  userId     String   @db.VarChar(36)
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime @default(now()) @db.Timestamp(0)
+  user       user     @relation(fields: [userId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+
+  @@index([userId], map: "email_verification_token_userId_fkey")
+}
+
+model reset_links {
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  token       String   @unique(map: "token_UNIQUE") @default(uuid()) @db.VarChar(36)
+  reset_token String?  @unique(map: "reset_token_UNIQUE") @db.VarChar(36)
+  email       String   @db.VarChar(100)
+  isUsed      Boolean  @default(false)
+  isExpired   Boolean  @default(false)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+}
+
+enum oauth_providers_enum {
+  LOCAL
+  GOOGLE
+  MICROSOFT
+}
+
+enum user_role {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
