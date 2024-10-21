@@ -2,6 +2,8 @@ import { Optional } from '@nestjs/common';
 import { order_status } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import {
+  ArrayNotEmpty,
+  IsArray,
   IsDate,
   IsDefined,
   IsIn,
@@ -98,12 +100,11 @@ export class CreateOrderDto {
   @IsNotEmpty()
   paymentType: string;
 
-  @IsObject()
-  @IsDefined()
-  @ValidateNested()
-  @IsNotEmptyObject()
+  @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => ProductDto)
-  products: ProductDto;
+  @ArrayNotEmpty()
+  products: ProductDto[];
 
   @IsString()
   @IsNotEmpty()
