@@ -97,8 +97,8 @@ export class CreateInvoiceDto {
   shippingAddress: AddressDto;
 
   @IsString()
-  @IsNotEmpty()
-  paymentType: string;
+  @IsOptional()
+  paymentType?: string;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -149,6 +149,6 @@ export class CreateInvoiceDto {
   type: invoice_type;
 
   @IsString()
-  @IsNotEmpty()
-  paymentTerms: string;
+  @IsOptional()
+  paymentTerms?: string;
 }

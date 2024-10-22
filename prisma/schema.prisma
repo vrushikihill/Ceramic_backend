@@ -75,7 +75,7 @@ model order {
   currency        String
   billingAddress  Json?        @db.Json
   shippingAddress Json?        @db.Json
-  paymentType     String
+  paymentType     String?
   products        Json         @db.Json
   subTotal        String
   totalQuantity   String
@@ -85,7 +85,7 @@ model order {
   total           String
   customerNote    String?
   status          order_status
-  paymentTerms    String
+  paymentTerms    String?
   invoceId        String?
   invoice         invoice?     @relation(fields: [invoceId], references: [id], onDelete: SetNull, onUpdate: Restrict)
 }
@@ -99,7 +99,7 @@ model invoice {
   currency        String
   billingAddress  Json?          @db.Json
   shippingAddress Json?          @db.Json
-  paymentType     String
+  paymentType     String?
   products        Json           @db.Json
   subTotal        String
   totalQuantity   String
@@ -109,7 +109,7 @@ model invoice {
   total           String
   customerNote    String?
   status          invoice_status
-  paymentTerms    String
+  paymentTerms    String?
   type            invoice_type
   order           order[]
 }

@@ -10,7 +10,7 @@ type CreateArgs = {
   currency: string;
   billingAddress: any;
   shippingAddress: any;
-  paymentType: string;
+  paymentType?: string;
   products: any;
   subTotal: string;
   totalQuantity: string;
@@ -20,7 +20,7 @@ type CreateArgs = {
   total: string;
   customerNote?: string;
   status: order_status;
-  paymentTerms: string;
+  paymentTerms?: string;
 };
 
 @Injectable()
