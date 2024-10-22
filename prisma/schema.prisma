@@ -114,6 +114,28 @@ model invoice {
   order           order[]
 }
 
+model customer {
+  id              String        @id @default(uuid()) @db.VarChar(36)
+  salutation      String        @default("") @db.VarChar(100)
+  firstName       String        @default("") @db.VarChar(100)
+  lastName        String        @default("") @db.VarChar(100)
+  companyName     String?       @default("") @db.VarChar(100)
+  displayName     String        @default("") @db.VarChar(100)
+  email           String?       @db.VarChar(100)
+  businessPhone   String        @default("") @db.VarChar(100)
+  mobile          String?       @default("") @db.VarChar(100)
+  gstIn           String?       @default("") @db.VarChar(100)
+  pan             String?       @default("") @db.VarChar(100)
+  currency        String        @default("") @db.VarChar(100)
+  paymentTerms    String?       @default("") @db.VarChar(100)
+  creditLimit     String?       @default("") @db.VarChar(100)
+  panCardImage    Json?         @db.Json
+  billingAddress  Json?         @db.Json
+  shippingAddress Json?         @db.Json
+  remarks         String?       @default("") @db.VarChar(100)
+  type            customer_type
+}
+
 enum oauth_providers_enum {
   LOCAL
   GOOGLE
@@ -144,4 +166,9 @@ enum invoice_type {
   SALES_BILLS
   PURCHASE_ORDERS
   PURCHASE_BILL
+}
+
+enum customer_type {
+  CUSTOMER
+  VENDORS
 }
