@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { UserModule } from './user/user.module';
 import { OrderModule } from './order/order.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OrderModule } from './order/order.module';
     EmailModule,
     CommonModule,
     OrderModule,
+    InvoiceModule,
   ],
 })
 export class ApiModule implements NestModule {

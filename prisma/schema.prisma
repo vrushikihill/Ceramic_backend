@@ -79,13 +79,39 @@ model order {
   products        Json         @db.Json
   subTotal        String
   totalQuantity   String
-  tax             String
-  discount        String
-  adjustment      String
+  tax             String?
+  discount        String?
+  adjustment      String?
   total           String
   customerNote    String?
   status          order_status
   paymentTerms    String
+  invoceId        String?
+  invoice         invoice?     @relation(fields: [invoceId], references: [id], onDelete: SetNull, onUpdate: Restrict)
+}
+
+model invoice {
+  id              String         @id @default(uuid()) @db.VarChar(36)
+  name            String         @default("") @db.VarChar(100)
+  date            DateTime
+  dueDate         DateTime
+  invoiceNumber   String
+  currency        String
+  billingAddress  Json?          @db.Json
+  shippingAddress Json?          @db.Json
+  paymentType     String
+  products        Json           @db.Json
+  subTotal        String
+  totalQuantity   String
+  tax             String?
+  discount        String?
+  adjustment      String?
+  total           String
+  customerNote    String?
+  status          invoice_status
+  paymentTerms    String
+  type            invoice_type
+  order           order[]
 }
 
 enum oauth_providers_enum {
@@ -105,4 +131,17 @@ enum order_status {
   IN_PROGRESS
   SUCCESS
   FAILED
+}
+
+enum invoice_status {
+  DRAFT
+  PUBLISH
+}
+
+enum invoice_type {
+  INVOICE
+  ESTIMATE
+  SALES_BILLS
+  PURCHASE_ORDERS
+  PURCHASE_BILL
 }

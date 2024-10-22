@@ -1,5 +1,5 @@
 import { Optional } from '@nestjs/common';
-import { order_status } from '@prisma/client';
+import { invoice_status, invoice_type } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
@@ -59,7 +59,7 @@ export class ProductDto {
   amount: string;
 }
 
-export class CreateOrderDto {
+export class CreateInvoiceDto {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -76,7 +76,7 @@ export class CreateOrderDto {
 
   @IsString()
   @IsNotEmpty()
-  number: string;
+  invoiceNumber: string;
 
   @IsString()
   @IsNotEmpty()
@@ -135,8 +135,18 @@ export class CreateOrderDto {
   customerNote: string;
 
   @IsString()
-  @IsIn(['PENDING', 'IN_PROGRESS', 'SUCCESS', 'FAILED'])
-  status: order_status;
+  @IsIn(['DRAFT', 'PUBLISH'])
+  status: invoice_status;
+
+  @IsString()
+  @IsIn([
+    'INVOICE',
+    'ESTIMATE',
+    'SALES_BILLS',
+    'PURCHASE_ORDERS',
+    'PURCHASE_BILL',
+  ])
+  type: invoice_type;
 
   @IsString()
   @IsNotEmpty()

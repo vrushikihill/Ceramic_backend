@@ -14,9 +14,9 @@ type CreateArgs = {
   products: any;
   subTotal: string;
   totalQuantity: string;
-  tax: string;
-  discount: string;
-  adjustment: string;
+  tax?: string;
+  discount?: string;
+  adjustment?: string;
   total: string;
   customerNote?: string;
   status: order_status;
