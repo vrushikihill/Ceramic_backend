@@ -1,6 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { order_status } from '@prisma/client';
+import { PaginationDto } from 'src/constants/dto/pagination.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+
+type FindArgs = {
+  pagination: PaginationDto;
+  search?: string;
+};
+
+type CountArgs = {
+  search?: string;
+};
 
 type CreateArgs = {
   name: string;
@@ -23,9 +33,45 @@ type CreateArgs = {
   paymentTerms?: string;
 };
 
+const defaultValue = {
+  adjustment: true,
+  billingAddress: true,
+  currency: true,
+  customerNote: true,
+  date: true,
+  discount: true,
+  dueDate: true,
+  id: true,
+  name: true,
+  number: true,
+  paymentTerms: true,
+  paymentType: true,
+  products: true,
+  shippingAddress: true,
+  status: true,
+  subTotal: true,
+  tax: true,
+  total: true,
+  totalQuantity: true,
+  invoceId: true,
+};
+
 @Injectable()
 export class OrderService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async find({ pagination, search }: FindArgs) {
+    return await this.prisma.order.findMany({
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+      select: defaultValue,
+      where: {
+        name: {
+          contains: search,
+        },
+      },
+    });
+  }
 
   async create(data: CreateArgs) {
     const order = await this.prisma.order.create({
@@ -52,5 +98,15 @@ export class OrderService {
     });
 
     return order;
+  }
+
+  async count({ search }: CountArgs) {
+    return await this.prisma.order.count({
+      where: {
+        name: {
+          contains: search,
+        },
+      },
+    });
   }
 }

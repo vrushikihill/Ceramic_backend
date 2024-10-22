@@ -1,6 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { invoice_status, invoice_type } from '@prisma/client';
+import { PaginationDto } from 'src/constants/dto/pagination.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+
+type FindArgs = {
+  pagination: PaginationDto;
+  search?: string;
+  type?: invoice_type;
+};
+
+type CountArgs = {
+  search?: string;
+  type?: invoice_type;
+};
 
 type CreateArgs = {
   name: string;
@@ -50,6 +62,22 @@ const defaultValue = {
 @Injectable()
 export class InvoiceService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async find({ pagination, search, type }: FindArgs) {
+    return await this.prisma.invoice.findMany({
+      skip: pagination.page * pagination.pageSize,
+      take: pagination.pageSize,
+      select: defaultValue,
+      where: {
+        name: {
+          contains: search,
+        },
+        type: {
+          equals: type,
+        },
+      },
+    });
+  }
 
   async create(data: CreateArgs) {
     const invoice = await this.prisma.invoice.create({
@@ -107,5 +135,18 @@ export class InvoiceService {
       });
     }
     return invoice;
+  }
+
+  async count({ search, type }: CountArgs) {
+    return await this.prisma.invoice.count({
+      where: {
+        name: {
+          contains: search,
+        },
+        type: {
+          equals: type,
+        },
+      },
+    });
   }
 }
