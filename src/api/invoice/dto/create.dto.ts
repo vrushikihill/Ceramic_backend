@@ -135,8 +135,9 @@ export class CreateInvoiceDto {
   customerNote: string;
 
   @IsString()
+  @IsOptional()
   @IsIn(['DRAFT', 'PUBLISH'])
-  status: invoice_status;
+  status?: invoice_status;
 
   @IsString()
   @IsIn([

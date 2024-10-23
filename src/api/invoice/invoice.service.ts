@@ -31,7 +31,7 @@ type CreateArgs = {
   adjustment?: string;
   total: string;
   customerNote?: string;
-  status: invoice_status;
+  status?: invoice_status;
   paymentTerms?: string;
   type: invoice_type;
 };
@@ -97,7 +97,7 @@ export class InvoiceService {
         adjustment: data.adjustment,
         total: data.total,
         customerNote: data.customerNote,
-        status: data.status,
+        status: data.status || 'PUBLISH',
         paymentTerms: data.paymentTerms,
         products: data.products,
         type: data.type,
